@@ -29,9 +29,9 @@ public class CoursRequestDto {
         return Cours.builder()
                 .nbreHeureGlobal(nbreHeureGlobal)
                 .anneeScolaire(anneeScolaire)
-                .semestre(new Semestre())
-                .module(new Module())
-                .professeur(new Professeur())
+                .semestre(semestre)
+                .module(module)
+                .professeur(professeur)
                 .build();
 
     }
