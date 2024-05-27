@@ -22,6 +22,7 @@ public class ProfesseurSimpleResquestDto {
     private Specialiter specialite;
     private ENiveau grade;
 
+
     public Professeur TransformToEntity(){
         return Professeur.builder()
                 .nom(nom)
@@ -29,5 +30,9 @@ public class ProfesseurSimpleResquestDto {
                 .specialite(specialite)
                 .grade(grade)
                 .build();
+    }
+
+    public String nomComplet(){
+        return prenom + " " + nom;
     }
 }

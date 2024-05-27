@@ -1,12 +1,13 @@
 package org.ohara.maVraiDep.data.security.services.Impl;
 
 
+import lombok.RequiredArgsConstructor;
+
 import org.ohara.maVraiDep.data.security.data.entities.AppRole;
 import org.ohara.maVraiDep.data.security.data.entities.AppUser;
 import org.ohara.maVraiDep.data.security.repositories.AppRoleRepository;
 import org.ohara.maVraiDep.data.security.repositories.AppUserRepository;
 import org.ohara.maVraiDep.data.security.services.SecurityService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,8 +60,10 @@ public class SecurityServiceImpl implements SecurityService, UserDetailsService 
 
     @Override
     public void removeRoleToUser(String username,String roleName) {
+        // Recherche de l'utilisateur
         AppUser user = userRepository.findByUsername(username);
         if (user==null) throw new RuntimeException("User not found");
+        // Recherche de son role
         AppRole role = roleRepository.findByRoleName(roleName);
         if (role==null) throw new RuntimeException("Role not found");
         // suppression
@@ -71,17 +74,10 @@ public class SecurityServiceImpl implements SecurityService, UserDetailsService 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = userRepository.findByUsername(username);
-        if (appUser==null) throw new RuntimeException("User not found");
-
-        //transformer appUser en UserDetails les roles, ils les appellent GrantyAuthority
+        if (appUser == null) throw new RuntimeException("User not found ");
         List<SimpleGrantedAuthority> authorities = appUser.getRoles()
                 .stream()
                 .map(appRole -> new SimpleGrantedAuthority(appRole.getRoleName())).toList();
-
-        return new User(
-                appUser.getUsername(),
-                appUser.getPassword(),
-                authorities
-                );
+        return new User(appUser.getUsername(), appUser.getPassword(),authorities);
     }
 }
